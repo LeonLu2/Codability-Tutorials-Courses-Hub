@@ -1,19 +1,58 @@
-import Layout from "../components/Layout";
+import {useState} from 'react';
+import Layout from '../components/Layout';
 
 const Register = () => {
+  const [state, setState] = useState({
+    name: '',
+    email: '',
+    password: '',
+    error: '',
+    success: '',
+    buttonText: 'Register'
+  });
+
+  const {name, email, password, error, success, buttonText} = state;
+
+  const handleChange = name => e => {
+    setState({...state, [name]: e.target.value, error: '', success: '', buttonText: 'Register'});
+  };
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    console.table({name, email, password});
+  };
+
   const registerForm = () => (
-    <form>
+    <form onSubmit={handleSubmit}>
       <div className="form-group">
-        <input type="text" className="form-control" placeholder="Type your name" />
+        <input
+          value={name}
+          onChange={handleChange('name')}
+          type="text"
+          className="form-control"
+          placeholder="Type your name"
+        />
       </div>
       <div className="form-group">
-        <input type="email" className="form-control" placeholder="Type your email" />
+        <input
+          value={email}
+          onChange={handleChange('email')}
+          type="email"
+          className="form-control"
+          placeholder="Type your email"
+        />
       </div>
       <div className="form-group">
-        <input type="password" className="form-control" placeholder="Type your password" />
+        <input
+          value={password}
+          onChange={handleChange('password')}
+          type="password"
+          className="form-control"
+          placeholder="Type your password"
+        />
       </div>
       <div className="form-group">
-        <button className="btn btn-outline-warning">Register</button>
+        <button className="btn btn-outline-warning">{buttonText}</button>
       </div>
     </form>
   );
@@ -22,9 +61,10 @@ const Register = () => {
     <Layout>
       <div className="col-md-6 offset-md-3">
         <h1>Register</h1>
-          <br />
-          {registerForm()}
-          <hr />
+        <br/>
+        {registerForm()}
+        <hr/>
+        {JSON.stringify(state)}
       </div>
     </Layout>
   );
