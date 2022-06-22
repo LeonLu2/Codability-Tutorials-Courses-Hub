@@ -3,22 +3,11 @@ import React from 'react';
 import {useState, useEffect} from 'react';
 import Layout from '../../../components/Layout';
 import axios from 'axios';
+import {getCookie, isAuth} from '../../../helpers/auth';
 import {API} from '../../../config';
 import {showSuccessMessage, showErrorMessage} from '../../../helpers/alerts';
-/*
-handle change title
-handle change url
-handle change type
-handle change medium
-handle submit > post request to server
-show types > radio buttons
-show medium > radio buttons
-handle toggle > selecting categories
-return > show create forms, categories checkbox, radio buttons, success/error messages etc
-get token of the logged in user - required to create link
- */
 
-const Create = () => {
+const Create = ({token}) => {
   // state
   const [state, setState] = useState({
     title: '',
@@ -53,76 +42,105 @@ const Create = () => {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    console.table({title, url, categories, type, medium});
+    // console.table({ title, url, categories, type, medium });
+    try {
+      const response = await axios.post(
+        `${API}/link`,
+        {title, url, categories, type, medium},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      setState({
+        ...state,
+        title: '',
+        url: '',
+        success: 'Link is created',
+        error: '',
+        loadedCategories: [],
+        categories: [],
+        type: '',
+        medium: ''
+      });
+    } catch (error) {
+      console.log('LINK SUBMIT ERROR', error);
+      setState({...state, error: error.response.data.error});
+    }
   };
 
   const handleTypeClick = e => {
-    setState({...state, type: e.target.value, success: '', error:''});
+    setState({...state, type: e.target.value, success: '', error: ''});
   };
 
   const handleMediumClick = e => {
-    setState({...state, medium: e.target.value, success: '', error:''});
+    setState({...state, medium: e.target.value, success: '', error: ''});
   };
-
-  const showTypes = () => (
-    <React.Fragment>
-      <div className="Form-check pl-5">
-        <label className="form-check-label">
-          <input type="radio"
-            onClick={handleTypeClick}
-            defaultChecked="free"
-            value="free"
-            className="form-check-input"
-            name="type"
-          />{' '}
-          Free
-        </label>
-      </div>
-
-      <div className="Form-check pl-5">
-        <label className="form-check-label">
-          <input type="radio"
-            onClick={handleTypeClick}
-            defaultChecked="paid"
-            value="paid"
-            className="form-check-input"
-            name="type"
-          />{' '}
-          Paid
-        </label>
-      </div>
-    </React.Fragment>
-  )
 
   const showMedium = () => (
     <React.Fragment>
-      <div className="Form-check pl-5">
+      <div className="form-check ml-3">
         <label className="form-check-label">
-          <input type="radio"
+          <input
+            type="radio"
             onClick={handleMediumClick}
-            defaultChecked="video"
+            defaultChecked={medium === 'video'}
             value="video"
-            className="form-check-input"
+            className="from-check-input"
             name="medium"
           />{' '}
           Video
         </label>
       </div>
 
-      <div className="Form-check pl-5">
+      <div className="form-check ml-3">
         <label className="form-check-label">
-          <input type="radio"
+          <input
+            type="radio"
             onClick={handleMediumClick}
-            defaultChecked="book"
+            defaultChecked={medium === 'book'}
             value="book"
-            className="form-check-input"
+            className="from-check-input"
             name="medium"
           />{' '}
           Book
         </label>
       </div>
     </React.Fragment>
-  )
+  );
+
+  const showTypes = () => (
+    <React.Fragment>
+      <div className="form-check ml-3">
+        <label className="form-check-label">
+          <input
+            type="radio"
+            onClick={handleTypeClick}
+            defaultChecked={type === 'free'}
+            value="free"
+            className="from-check-input"
+            name="type"
+          />{' '}
+          Free
+        </label>
+      </div>
+
+      <div className="form-check ml-3">
+        <label className="form-check-label">
+          <input
+            type="radio"
+            onClick={handleTypeClick}
+            defaultChecked={type === 'paid'}
+            value="paid"
+            className="from-check-input"
+            name="type"
+          />{' '}
+          Paid
+        </label>
+      </div>
+    </React.Fragment>
+  );
 
   const handleToggle = c => () => {
     // return the first index or -1
@@ -163,8 +181,8 @@ const Create = () => {
         <input type="url" className="form-control" onChange={handleURLChange} value={url}/>
       </div>
       <div>
-        <button className="btn btn-outline-warning" type="submit">
-          Submit
+        <button disabled={!token} className="btn btn-outline-warning" type="submit">
+          {isAuth() || token ? 'Post' : 'Login to post'}
         </button>
       </div>
     </form>
@@ -193,12 +211,19 @@ const Create = () => {
             {showMedium()}
           </div>
         </div>
-        <div className="col-md-8">{submitLinkForm()}</div>
+        <div className="col-md-8">
+          {success && showSuccessMessage(success)}
+          {error && showErrorMessage(error)}
+          {submitLinkForm()}
+        </div>
       </div>
-      {JSON.stringify(type)}
-      {JSON.stringify(medium)}
     </Layout>
   );
+};
+
+Create.getInitialProps = ({req}) => {
+  const token = getCookie('token', req);
+  return {token};
 };
 
 export default Create;
