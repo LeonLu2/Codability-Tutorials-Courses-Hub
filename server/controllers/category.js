@@ -184,7 +184,7 @@ exports.update = (req, res) => {
       // remove the existing image from s3 before uploading new/updated one
       const deleteParams = {
         Bucket: 'react-aws-7',
-        Key: `category/${updated.image.key}`
+        Key: `${updated.image.key}`
       };
 
       s3.deleteObject(deleteParams, function (err, data) {
@@ -238,7 +238,7 @@ exports.remove = (req, res) => {
     // remove the existing image from s3 before uploading new/updated one
     const deleteParams = {
       Bucket: 'react-aws-7',
-      Key: `category/${data.image.key}`
+      Key: `${data.image.key}`
     };
 
     s3.deleteObject(deleteParams, function (err, data) {
