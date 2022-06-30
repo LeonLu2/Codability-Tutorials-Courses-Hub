@@ -14,13 +14,13 @@ const Links = ({query, category, links, totalLinks, linksLimit, linkSkip}) => {
   const [size, setSize] = useState(totalLinks);
 
   const handleClick = async linkId => {
-      const response = await axios.put(`${API}/click-count`, { linkId });
-      loadUpdatedLinks();
+    const response = await axios.put(`${API}/click-count`, {linkId});
+    loadUpdatedLinks();
   };
 
   const loadUpdatedLinks = async () => {
-      const response = await axios.post(`${API}/category/${query.slug}`);
-      setAllLinks(response.data.links);
+    const response = await axios.post(`${API}/category/${query.slug}`);
+    setAllLinks(response.data.links);
   };
 
   const listOfLinks = () =>
@@ -39,7 +39,7 @@ const Links = ({query, category, links, totalLinks, linksLimit, linkSkip}) => {
             <span className="pull-right">
                 {moment(l.createdAt).fromNow()} by {l.postedBy.name}
             </span>
-            <br />
+            <br/>
             <span className="badge text-secondary pull-right">{l.clicks} clicks</span>
           </div>
           <div className="col-md-12">
@@ -47,7 +47,7 @@ const Links = ({query, category, links, totalLinks, linksLimit, linkSkip}) => {
                 {l.type} / {l.medium}
             </span>
             {l.categories.map((c, i) => (
-                <span key={i} className="badge text-success">{c.name}</span>
+              <span key={i} className="badge text-success">{c.name}</span>
             ))}
           </div>
         </div>
@@ -55,13 +55,13 @@ const Links = ({query, category, links, totalLinks, linksLimit, linkSkip}) => {
     ));
 
   const loadMore = async () => {
-      let toSkip = skip + limit;
-      const response = await axios.post(`${API}/category/${query.slug}`, { skip: toSkip, limit });
-      setAllLinks([...allLinks, ...response.data.links]);
-      console.log('allLinks', allLinks);
-      console.log('response.data.links.length', response.data.links.length);
-      setSize(response.data.links.length);
-      setSkip(toSkip);
+    let toSkip = skip + limit;
+    const response = await axios.post(`${API}/category/${query.slug}`, {skip: toSkip, limit});
+    setAllLinks([...allLinks, ...response.data.links]);
+    console.log('allLinks', allLinks);
+    console.log('response.data.links.length', response.data.links.length);
+    setSize(response.data.links.length);
+    setSkip(toSkip);
   };
 
   // const loadMoreButton = () => {
