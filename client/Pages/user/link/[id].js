@@ -80,6 +80,7 @@ const Update = ({oldLink, token}) => {
             value="video"
             className="from-check-input"
             name="medium"
+            readOnly={true}
           />{' '}
           Video
         </label>
@@ -94,6 +95,7 @@ const Update = ({oldLink, token}) => {
             value="book"
             className="from-check-input"
             name="medium"
+            readOnly={true}
           />{' '}
           Book
         </label>
@@ -112,6 +114,7 @@ const Update = ({oldLink, token}) => {
             value="free"
             className="from-check-input"
             name="type"
+            readOnly={true}
           />{' '}
           Free
         </label>
@@ -126,6 +129,7 @@ const Update = ({oldLink, token}) => {
             value="paid"
             className="from-check-input"
             name="type"
+            readOnly={true}
           />{' '}
           Paid
         </label>
