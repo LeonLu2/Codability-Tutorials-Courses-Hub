@@ -69,7 +69,7 @@ const Links = ({token, links, totalLinks, linksLimit, linkSkip}) => {
           <span onClick={e => confirmDelete(e, l._id)} className="badge btn btn-danger pull-right">
             Delete
           </span>
-          <Link href={`/admin/link/${l._id}`}>
+          <Link href={`/user/link/${l._id}`}>
             <a>
               <span className="badge btn btn-info pull-right">Update</span>
             </a>
