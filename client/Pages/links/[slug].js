@@ -37,8 +37,7 @@ const Links = ({query, category, links, totalLinks, linksLimit, linkSkip}) => {
           </div>
           <div className="col-md-4 pt-2">
             <span className="pull-right">
-                {moment(l.createdAt).fromNow()} by
-              {/*{l.postedBy.name}*/}
+                {moment(l.createdAt).fromNow()} by {l.postedBy.name}
             </span>
             <br/>
             <span className="badge text-secondary pull-right">{l.clicks} clicks</span>
