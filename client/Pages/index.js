@@ -18,10 +18,15 @@ const Home = ({categories}) => {
     setPopular(response.data);
   };
 
+  const handleClick = async linkId => {
+      const response = await axios.put(`${API}/click-count`, { linkId });
+      loadPopular();
+  };
+
   const listOfLinks = () =>
     popular.map((l, i) => (
       <div key={i} className="row alert alert-secondary p-2">
-        <div className="col-md-8">
+        <div className="col-md-8" onClick={() => handleClick(l._id)}>
           <a href={l.url} target="_blank">
             <h5 className="pt-2">{l.title}</h5>
             <h6 className="pt-2 text-danger" style={{fontSize: '12px'}}>
